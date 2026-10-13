@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# hub
+/uploads
+*.db
+*.db-wal
+*.db-shm
+.claude/
+!.env.example
