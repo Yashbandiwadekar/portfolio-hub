@@ -1,6 +1,6 @@
 # portfolio-hub
 
-My portfolio site, plus a **private, invite-only chat and file drop** for friends and family.
+My portfolio site, plus a **private, invite-only chat and file drop**.
 Self-hosted on my own PC and published through a **Cloudflare Tunnel** (no inbound ports open).
 
 - `/` public portfolio
@@ -31,7 +31,7 @@ access, upload handling, chunked uploads, throttling, logout).
 
 ## Threat model (short version)
 
-**Assets:** family/friends' messages and files; the host PC; my account.
+**Assets:** guests' messages and files; the host PC; my account.
 **Attackers considered:** an unauthenticated internet user; a logged-in guest trying to reach another guest's data; a
 malicious uploader; a cross-site attacker abusing a logged-in guest's browser.
 
@@ -53,7 +53,7 @@ malicious uploader; a cross-site attacker abusing a logged-in guest's browser.
 - No 2FA. The password plus invite-only access is the bar; optional second layer: Cloudflare Access (email OTP) in front of `/chat`.
 - `style-src` allows `'unsafe-inline'` (React inline style attributes can't carry a nonce).
 - Single-process, in-memory rate limiting. Fine for one server, not for a cluster.
-- Uploads are buffered in memory (≤ 50 MB) before being written. Fine at family scale.
+- Uploads are buffered in memory (≤ 50 MB) before being written. Fine at small scale.
 - Availability = my PC being on.
 
 ## Publishing with Cloudflare Tunnel
