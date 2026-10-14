@@ -279,6 +279,32 @@ export default async function Home() {
                 </li>
               ))}
             </ul>
+            <div className="badges">
+              {[
+                ["0ff06f85-4bda-4525-94f1-85bc143a5b68", "AWS Certified Cloud Practitioner"],
+                ["5265e9ac-0ce2-433e-93e3-3d8c290cad25", "TryHackMe Cyber Security 101 (SEC1)"],
+                ["54ad845f-d2f8-4d79-b199-0f9cd1376c18", "TryHackMe Pre Security (SEC0)"],
+              ].map(([id, title]) => (
+                <iframe
+                  key={id}
+                  src={`https://www.credly.com/embedded_badge/${id}`}
+                  title={`${title} badge on Credly`}
+                  width={150}
+                  height={270}
+                  loading="lazy"
+                  scrolling="no"
+                />
+              ))}
+              <iframe
+                className="thm"
+                src="https://tryhackme.com/badge/t/846ff7119ed6c8fbff74aa9be4210325138988e504a37c983c409a9bae5090866821c75a37d5b38c0f4b681cb248f066/embed?theme=dark"
+                title="TryHackMe profile badge"
+                width={400}
+                height={172}
+                loading="lazy"
+                scrolling="no"
+              />
+            </div>
           </div>
         </section>
 

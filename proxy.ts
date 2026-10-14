@@ -16,6 +16,7 @@ export function proxy(request: NextRequest) {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
+    "frame-src https://www.credly.com https://tryhackme.com",
     "frame-ancestors 'none'",
   ].join("; ");
 
