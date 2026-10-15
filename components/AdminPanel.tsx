@@ -61,3 +61,27 @@ export function DisableToggle({ id, disabled }: { id: string; disabled: boolean 
     </button>
   );
 }
+
+export function WakeButton({ mac }: { mac: string }) {
+  const [status, setStatus] = useState("");
+  const [busy, setBusy] = useState(false);
+  return (
+    <div className="row" style={{ flexWrap: "wrap" }}>
+      <button
+        className="btn primary"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          setStatus("");
+          const res = await fetch("/api/admin/wol", { method: "POST" }).catch(() => null);
+          const data = await res?.json().catch(() => null);
+          setStatus(res?.ok ? `Magic packet sent to ${mac} (${data.sentTo.join(", ")}). Give it ~30 s to boot.` : data?.error ?? "Network error");
+          setBusy(false);
+        }}
+      >
+        {busy ? "Sending…" : "Wake PC"}
+      </button>
+      <span className="meta" role="status">{status}</span>
+    </div>
+  );
+}

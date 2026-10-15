@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { DisableToggle, InviteForm } from "@/components/AdminPanel";
+import { DisableToggle, InviteForm, WakeButton } from "@/components/AdminPanel";
 import { LogoutButton } from "@/components/LogoutButton";
 import { getDb } from "@/lib/db";
 import { requireAdmin } from "@/lib/dal";
+import { WOL_MAC } from "@/lib/wol";
 
 export const metadata = { title: "Admin — Yash Bandiwadekar", robots: { index: false } };
 
@@ -36,6 +37,12 @@ export default async function AdminPage() {
           <LogoutButton />
         </div>
       </nav>
+
+      <section className="block">
+        <h2>Wake-on-LAN</h2>
+        <p className="meta">Sends a magic packet on the home network to <code>{WOL_MAC}</code>.</p>
+        <WakeButton mac={WOL_MAC} />
+      </section>
 
       <section className="block">
         <h2>Guests</h2>
