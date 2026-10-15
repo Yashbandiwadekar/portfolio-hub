@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export function InviteForm() {
@@ -65,23 +65,49 @@ export function DisableToggle({ id, disabled }: { id: string; disabled: boolean 
 export function WakeButton({ mac }: { mac: string }) {
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pc, setPc] = useState<{ up: boolean; host: string } | null>(null);
+  const fastUntil = useRef(0);
+
+  // Poll whether the PC is on: every 15 s, or every 5 s for 2 minutes after a wake.
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    let stopped = false;
+    const tick = async () => {
+      const res = await fetch("/api/admin/pc-status").catch(() => null);
+      if (res?.ok && !stopped) setPc(await res.json());
+      if (!stopped) timer = setTimeout(tick, Date.now() < fastUntil.current ? 5000 : 15000);
+    };
+    tick();
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <div className="row" style={{ flexWrap: "wrap" }}>
+      <span className="chip" role="status" aria-live="polite">
+        <span className={`status ${pc?.up ? "on" : ""}`} aria-hidden />
+        PC {pc ? (pc.up ? "is on" : "is off") : "checking…"}
+        {pc ? ` · ${pc.host}` : ""}
+      </span>
       <button
         className="btn primary"
-        disabled={busy}
+        disabled={busy || !!pc?.up}
+        title={pc?.up ? "The PC is already on" : undefined}
         onClick={async () => {
           setBusy(true);
           setStatus("");
           const res = await fetch("/api/admin/wol", { method: "POST" }).catch(() => null);
           const data = await res?.json().catch(() => null);
-          setStatus(res?.ok ? `Magic packet sent to ${mac} (${data.sentTo.join(", ")}). Give it ~30 s to boot.` : data?.error ?? "Network error");
+          if (res?.ok) fastUntil.current = Date.now() + 120_000;
+          setStatus(res?.ok ? `Magic packet sent to ${mac}. Watching for it to come up…` : data?.error ?? "Network error");
           setBusy(false);
         }}
       >
         {busy ? "Sending…" : "Wake PC"}
       </button>
-      <span className="meta" role="status">{status}</span>
+      {status && <span className="meta">{status}</span>}
     </div>
   );
 }
