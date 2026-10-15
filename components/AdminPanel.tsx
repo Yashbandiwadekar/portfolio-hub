@@ -107,6 +107,23 @@ export function WakeButton({ mac }: { mac: string }) {
       >
         {busy ? "Sending…" : "Wake PC"}
       </button>
+      <button
+        className="btn danger"
+        disabled={busy || !pc?.up}
+        title={pc?.up ? undefined : "The PC is already off"}
+        onClick={async () => {
+          if (!window.confirm("Request a shutdown? Anyone using the PC gets a 2-minute countdown with a Cancel button.")) return;
+          setBusy(true);
+          setStatus("");
+          const res = await fetch("/api/admin/pc-shutdown", { method: "POST" }).catch(() => null);
+          const data = await res?.json().catch(() => null);
+          if (res?.ok) fastUntil.current = Date.now() + 240_000;
+          setStatus(res?.ok ? "Shutdown requested: the PC shows a 2-minute countdown and turns off unless someone cancels." : data?.error ?? "Network error");
+          setBusy(false);
+        }}
+      >
+        Shut down PC
+      </button>
       {status && <span className="meta">{status}</span>}
     </div>
   );
