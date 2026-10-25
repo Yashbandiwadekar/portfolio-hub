@@ -282,6 +282,7 @@ export default async function Home() {
             <div className="badges">
               {[
                 ["0ff06f85-4bda-4525-94f1-85bc143a5b68", "AWS Certified Cloud Practitioner"],
+                ["95f11084-9f2a-4ee5-b10f-a3bdfdfe6bd3", "TryHackMe SOC Analyst Level 1 (SAL1)"],
                 ["5265e9ac-0ce2-433e-93e3-3d8c290cad25", "TryHackMe Cyber Security 101 (SEC1)"],
                 ["54ad845f-d2f8-4d79-b199-0f9cd1376c18", "TryHackMe Pre Security (SEC0)"],
               ].map(([id, title]) => (
