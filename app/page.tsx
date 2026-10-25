@@ -291,8 +291,8 @@ export default async function Home() {
                   key={id}
                   src={`https://www.credly.com/embedded_badge/${id}`}
                   title={`${title} badge on Credly`}
-                  width={150}
-                  height={270}
+                  width={270}
+                  height={300}
                   loading="lazy"
                   scrolling="no"
                 />
